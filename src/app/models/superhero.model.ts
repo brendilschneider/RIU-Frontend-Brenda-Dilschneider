@@ -22,7 +22,7 @@ export interface PowerStats {
 
 export interface Appearance {
   gender: string;
-  race: string | null;
+  race: string;
   height: string[];
   weight: string[];
   eyeColor: string;
@@ -35,7 +35,7 @@ export interface Biography {
   aliases: string[];
   placeOfBirth: string;
   firstAppearance: string;
-  publisher: string | null;
+  publisher: string;
   alignment: string;
 }
 

@@ -1,15 +1,13 @@
 import { Component, signal } from '@angular/core';
-import { Superhero } from '../models/superhero.model';
+import { SuperheroTableComponent } from './superheroes/superheroe-table/superhero-table';
 
 @Component({
-  imports: [],
   standalone: true,
+  imports: [
+    SuperheroTableComponent
+  ],
   selector: 'app-dashboard',
   styleUrl: './dashboard.scss',
   templateUrl: './dashboard.html',
 })
-export class DashboardComponent {
-
-  heroes = signal<Superhero[]>([]);
-
-}
+export class DashboardComponent { }
