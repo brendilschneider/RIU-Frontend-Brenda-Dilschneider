@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
+import { Superhero } from '../models/superhero.model';
 
 @Component({
   imports: [],
@@ -7,4 +8,8 @@ import { Component } from '@angular/core';
   styleUrl: './dashboard.scss',
   templateUrl: './dashboard.html',
 })
-export class DashboardComponent {}
+export class DashboardComponent {
+
+  heroes = signal<Superhero[]>([]);
+
+}

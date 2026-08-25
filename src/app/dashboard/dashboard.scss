@@ -1,0 +1,36 @@
+@use '@angular/material' as mat;
+
+.dashboard-container {
+  min-height: 100vh;
+  background-color: #f8fafc;
+  display: flex;
+  flex-direction: column;
+}
+
+.dashboard-header {
+  background-color: #ffffff;
+  width: 100%;
+  @include mat.elevation(2);
+
+  .header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1.25rem 2rem;
+    display: flex;
+    align-items: center;
+  }
+
+  .dashboard-title {
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: #1e293b;
+    margin: 0;
+  }
+}
+.dashboard-content {
+  padding: 2rem;
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  box-sizing: border-box;
+}

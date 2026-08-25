@@ -1,5 +1,5 @@
 
-export interface Superheroe {
+export interface Superhero {
   id: number;
   name: string;
   slug: string;
