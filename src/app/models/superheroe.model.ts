@@ -1,0 +1,57 @@
+
+export interface Superheroe {
+  id: number;
+  name: string;
+  slug: string;
+  powerstats: PowerStats;
+  appearance: Appearance;
+  biography: Biography;
+  work: Work;
+  connections: Connections;
+  images: SuperheroImages;
+}
+
+export interface PowerStats {
+  intelligence: number;
+  strength: number;
+  speed: number;
+  durability: number;
+  power: number;
+  combat: number;
+}
+
+export interface Appearance {
+  gender: string;
+  race: string | null;
+  height: string[];
+  weight: string[];
+  eyeColor: string;
+  hairColor: string;
+}
+
+export interface Biography {
+  fullName: string;
+  alterEgos: string;
+  aliases: string[];
+  placeOfBirth: string;
+  firstAppearance: string;
+  publisher: string | null;
+  alignment: string;
+}
+
+export interface Work {
+  occupation: string;
+  base: string;
+}
+
+export interface Connections {
+  groupAffiliation: string;
+  relatives: string;
+}
+
+export interface SuperheroImages {
+  xs: string;
+  sm: string;
+  md: string;
+  lg: string;
+}
