@@ -1,10 +1,10 @@
-import { Component, signal } from '@angular/core';
-import { SuperheroTableComponent } from './superheroes/superheroe-table/superhero-table';
+import { Component } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   standalone: true,
   imports: [
-    SuperheroTableComponent
+    RouterOutlet,
   ],
   selector: 'app-dashboard',
   styleUrl: './dashboard.scss',

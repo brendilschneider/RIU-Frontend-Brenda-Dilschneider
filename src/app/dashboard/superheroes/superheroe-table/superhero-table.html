@@ -1,5 +1,12 @@
 <div class="table-wrapper">
 
+  <div class="header-actions-bar">
+    <h2>Superheroes</h2>
+    <button mat-flat-button color="primary" class="add-hero-btn" (click)="addNewHero()">
+      New hero
+    </button>
+  </div>
+
 <mat-form-field appearance="outline" class="search-field full-width">
   <mat-label>Search a hero</mat-label>
   <input matInput
@@ -39,6 +46,9 @@
       <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef class="actions-header"> Actions </th>
         <td mat-cell *matCellDef="let element" class="actions-cell">
+          <button mat-icon-button color="accent" matTooltip="View details">
+            <mat-icon>visibility</mat-icon>
+          </button>
           <button mat-icon-button color="primary" matTooltip="Edit">
             <mat-icon>edit</mat-icon>
           </button>

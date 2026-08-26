@@ -1,0 +1,70 @@
+<div class="form-card-container">
+  <div class="form-header">
+    <h2>New Superhero</h2>
+  </div>
+
+  <form [formGroup]="heroForm" (ngSubmit)="onSubmit()" class="superhero-form">
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Hero Image URL (sm)</mat-label>
+      <input matInput type="url" formControlName="imageUrl"
+             placeholder="https://example.com/image.jpg">
+      @if (getError('imageUrl')) {
+        <mat-error>{{ getError('imageUrl') }}</mat-error>
+      }
+    </mat-form-field>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Superhero Name</mat-label>
+        <input matInput formControlName="name" placeholder="e.g. Iron Man">
+        @if (getError('name')) {
+          <mat-error>{{ getError('name') }}</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Slug</mat-label>
+        <input matInput formControlName="slug" placeholder="e.g. iron-man">
+        @if (getError('slug')) {
+          <mat-error>{{ getError('slug') }}</mat-error>
+        }
+      </mat-form-field>
+    </div>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Real name</mat-label>
+        <input matInput formControlName="fullName" placeholder="e.g. Tony Stark">
+        @if (getError('fullName')) {
+          <mat-error>{{ getError('fullName') }}</mat-error>
+        }
+      </mat-form-field>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Intelligence</mat-label>
+        <input matInput type="number" formControlName="intelligence">
+        @if (getError('intelligence')) {
+          <mat-error>{{ getError('intelligence') }}</mat-error>
+        }
+      </mat-form-field>
+            <mat-form-field appearance="outline">
+        <mat-label>Power</mat-label>
+        <input matInput type="number" formControlName="power">
+        @if (getError('power')) {
+          <mat-error>{{ getError('power') }}</mat-error>
+        }
+      </mat-form-field>
+    </div>
+
+    <div class="form-actions">
+      <button mat-stroked-button color="primary" type="button" (click)="onCancel()">
+        Cancel
+      </button>
+      <button mat-flat-button color="accent" type="submit">
+        Save
+      </button>
+    </div>
+
+  </form>
+</div>

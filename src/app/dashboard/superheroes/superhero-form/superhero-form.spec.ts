@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { SuperheroTableComponent } from './superhero-table';
+import { SuperheroFormComponent } from './superhero-form';
 
-describe('SuperheroTableComponent', () => {
-  let component: SuperheroTableComponent;
-  let fixture: ComponentFixture<SuperheroTableComponent>;
+describe('SuperheroeForm', () => {
+  let component: SuperheroFormComponent;
+  let fixture: ComponentFixture<SuperheroFormComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SuperheroTableComponent],
+      imports: [SuperheroFormComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(SuperheroTableComponent);
+    fixture = TestBed.createComponent(SuperheroFormComponent);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

@@ -9,6 +9,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { Router } from '@angular/router';
 
 @Component({
   standalone: true,
@@ -29,6 +30,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 export class SuperheroTableComponent implements OnInit {
 
   private superheroService = inject(SuperheroesService);
+  private router = inject(Router);
 
   displayedColumns: string[] = ['avatar', 'name', 'intelligence', 'power', 'actions'];
 
@@ -70,6 +72,10 @@ export class SuperheroTableComponent implements OnInit {
   onPageChange(event: PageEvent): void {
     this.pageIndex.set(event.pageIndex);
     this.pageSize.set(event.pageSize);
+  }
+
+  addNewHero() {
+    this.router.navigate(['/hero/new']);
   }
 
 }
