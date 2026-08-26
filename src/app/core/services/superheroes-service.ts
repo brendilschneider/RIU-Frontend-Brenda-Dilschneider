@@ -25,7 +25,20 @@ export class SuperheroesService {
   }
 
   getHeroById(id: number): Observable<Superhero> {
-    return this.http.get<Superhero>(`${this.apiUrl}/id/${id}.json`);
+    const hero = this.heroes.find(h => h.id === id);
+
+    if (hero) {
+      return of(hero);
+    }
+
+    return this.http.get<Superhero>(`${this.apiUrl}/id/${id}.json`).pipe(
+      tap(serverHero => {
+        const exists = this.heroes.some(h => h.id === serverHero.id);
+        if (!exists) {
+          this.heroes = [...this.heroes, serverHero];
+        }
+      })
+    );
   }
   
   search(query: string): Observable<Superhero[]> {
@@ -36,7 +49,7 @@ export class SuperheroesService {
     );
   }
 
-  add(hero: Omit<Superhero, 'id'>): Observable<Superhero> {
+  add(hero: Partial<Superhero>): Observable<Superhero> {
     const newId = Math.max(...this.heroes.map(h => h.id), 0) + 1;
     const newHero = { ...hero, id: newId } as Superhero;
     this.heroes = [...this.heroes, newHero];

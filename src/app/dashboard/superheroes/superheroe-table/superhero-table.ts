@@ -78,4 +78,8 @@ export class SuperheroTableComponent implements OnInit {
     this.router.navigate(['/hero/new']);
   }
 
+  editHero(hero: Superhero) {
+    this.router.navigate(['/hero', hero.id]);
+  }
+
 }

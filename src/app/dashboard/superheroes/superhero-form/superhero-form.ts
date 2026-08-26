@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { SuperheroesService } from '../../../core/services/superheroes-service';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -27,13 +27,25 @@ export class SuperheroFormComponent implements OnInit {
 
   private fb = inject(FormBuilder);
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
   private superheroService = inject(SuperheroesService);
   private snackBar = inject(MatSnackBar);
 
   heroForm!: FormGroup;
+  heroId: number = 0;
+  isEditMode = false;
 
   ngOnInit(): void {
     this.initForm();
+
+    this.route.paramMap.subscribe(params => {
+      const id = params.get('id');
+      if (id) {
+        this.heroId = +id;
+        this.isEditMode = true;
+        this.loadHeroData(+id);
+      }
+    });
   }
 
   private initForm(): void {
@@ -48,6 +60,26 @@ export class SuperheroFormComponent implements OnInit {
     });
   }
 
+  private loadHeroData(id: number): void {
+    this.superheroService.getHeroById(id).subscribe({
+      next: (hero: Superhero) => {
+        this.heroForm.patchValue({
+          name: hero.name,
+          slug: hero.slug,
+          imageUrl: hero.images?.sm || '',
+          intelligence: hero.powerstats?.intelligence || 0,
+          power: hero.powerstats?.power || 0,
+          fullName: hero.biography?.fullName || '',
+          alignment: hero.biography?.alignment || 'good',
+        });
+      },
+      error: () => {
+        this.snackBar.open('Error loading superhero data', 'Close', { duration: 3000 });
+        this.router.navigate(['/']);
+      }
+    });
+  }
+
   getError(controlName: string): string {
     const control = this.heroForm.get(controlName);
     if (!control?.touched) return '';
@@ -58,9 +90,10 @@ export class SuperheroFormComponent implements OnInit {
     return '';
   }
 
-  private buildHero(): Omit<Superhero, 'id'> {
+  private buildHero(): Superhero {
     const f = this.heroForm.value;
     return {
+      id: this.isEditMode ? this.heroId : 0,
       name: f.name,
       slug: f.slug,
       powerstats: {
@@ -119,14 +152,27 @@ export class SuperheroFormComponent implements OnInit {
 
     const hero = this.buildHero();
 
-    this.superheroService.add(hero).subscribe({
-      next: () => {
-        this.snackBar.open('Superhero added!', 'Close', { duration: 3000 });
-        this.router.navigate(['/']);
-      },
-      error: () => {
-        this.snackBar.open('Error adding superhero', 'Close', { duration: 3000 });
-      }
-    });
+    if (this.isEditMode && this.heroId) {
+      this.superheroService.update(hero).subscribe({
+        next: () => {
+          this.snackBar.open('Superhero updated successfully!', 'Close', { duration: 3000 });
+          this.router.navigate(['/']);
+        },
+        error: () => {
+          this.snackBar.open('Error updating superhero', 'Close', { duration: 3000 });
+        }
+      });
+    } else {
+      this.superheroService.add(hero).subscribe({
+        next: () => {
+          this.snackBar.open('Superhero added!', 'Close', { duration: 3000 });
+          this.router.navigate(['/']);
+        },
+        error: () => {
+          this.snackBar.open('Error adding superhero', 'Close', { duration: 3000 });
+        }
+      });
+    }
   }
+
 }
