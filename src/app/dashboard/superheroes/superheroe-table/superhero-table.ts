@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { SuperheroesService } from '../../../core/services/superheroes-service';
 import { Superhero } from '../../../models/superhero.model';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
@@ -28,20 +28,48 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 })
 export class SuperheroTableComponent implements OnInit {
 
-  displayedColumns: string[] = ['avatar', 'name', 'intelligence', 'power', 'actions'];
-
-  pagedHeroes = signal<Superhero[]>([]);
-  pageSize = 10;
-
   private superheroService = inject(SuperheroesService);
 
+  displayedColumns: string[] = ['avatar', 'name', 'intelligence', 'power', 'actions'];
+
+  heroes = signal<Superhero[]>([]);
+  searchQuery = signal('');
+  pageIndex = signal(0);
+  pageSize = signal(10);
+  isLoading = signal(false);
+  
+  filteredHeroes = computed(() =>
+    this.heroes().filter(h =>
+      h.name.toLowerCase().includes(this.searchQuery().toLowerCase())
+    )
+  );
+
+  paginatedHeroes = computed(() => {
+    const start = this.pageIndex() * this.pageSize();
+    return this.filteredHeroes().slice(start, start + this.pageSize());
+  });
+
+  totalHeroes = computed(() => this.filteredHeroes().length);
+
   ngOnInit(): void {
+    this.isLoading.set(true);
     this.superheroService.getAllHeroes().subscribe({
-      next: (data) => {
-        this.pagedHeroes.set(data.slice(0, this.pageSize));
+      next: heroes => {
+        this.heroes.set(heroes);
+        this.isLoading.set(false);
       },
-      error: (err) => console.error('Error to load superheroes:', err)
+      error: () => this.isLoading.set(false)
     });
+  }
+
+  onSearch(query: string) {
+    this.searchQuery.set(query);
+    this.pageIndex.set(0);
+  }
+
+  onPageChange(event: PageEvent): void {
+    this.pageIndex.set(event.pageIndex);
+    this.pageSize.set(event.pageSize);
   }
 
 }

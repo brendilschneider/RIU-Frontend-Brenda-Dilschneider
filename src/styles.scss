@@ -7,13 +7,21 @@
 
 html {
   height: 100%;
+  
+  @include mat.core();
+
   @include mat.theme(
     (
       color: (
+        
+        theme-type: light, 
         primary: mat.$azure-palette,
         tertiary: mat.$blue-palette,
       ),
-      typography: Roboto,
+      typography: (
+        brand-family: 'Roboto, sans-serif',
+        plain-family: 'Roboto, sans-serif',
+      ),
       density: 0,
     )
   );
@@ -24,7 +32,10 @@ body {
 
   background-color: #f8fafc;
   color: var(--mat-sys-on-surface);
-  font: var(--mat-sys-body-medium);
+  
+  font-family: var(--mat-sys-body-medium-font);
+  font-size: var(--mat-sys-body-medium-size);
+  font-weight: var(--mat-sys-body-medium-weight);
  
   margin: 0;
   height: 100%;
