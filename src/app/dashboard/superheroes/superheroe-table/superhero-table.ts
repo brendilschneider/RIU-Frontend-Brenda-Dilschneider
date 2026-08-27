@@ -9,12 +9,14 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { Router } from '@angular/router';
 import { DialogService } from '../../../shared/confirm-dialog/confirm-dialog.service';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatDialog } from '@angular/material/dialog';
 import { HeroDetailDialogComponent } from '../hero-detail-dialog/hero-detail-dialog.component';
+import { LoadingService } from '../../../core/services/loading.service';
 
 @Component({
   standalone: true,
@@ -27,7 +29,8 @@ import { HeroDetailDialogComponent } from '../hero-detail-dialog/hero-detail-dia
     MatInputModule,
     MatFormFieldModule,
     MatTooltipModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatProgressBarModule
   ],
   selector: 'app-superhero-table',
   styleUrl: './superhero-table.scss',
@@ -36,6 +39,8 @@ import { HeroDetailDialogComponent } from '../hero-detail-dialog/hero-detail-dia
 export class SuperheroTableComponent implements OnInit {
 
   private superheroService = inject(SuperheroesService);
+  public loadingService = inject(LoadingService);
+
   private router = inject(Router);
   private dialogService = inject(DialogService);
   private snackBar = inject(MatSnackBar);

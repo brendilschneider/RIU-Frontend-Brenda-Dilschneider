@@ -17,7 +17,9 @@
   </button>
 </mat-form-field>
 
-
+  @if (loadingService.isLoading()) {
+    <mat-progress-bar mode="indeterminate" color="primary" class="loading-bar"></mat-progress-bar>
+  }
   <div class="mat-elevation-z4 table-container">
     <table mat-table [dataSource]="paginatedHeroes()" class="mat-table mat-striped">
 
