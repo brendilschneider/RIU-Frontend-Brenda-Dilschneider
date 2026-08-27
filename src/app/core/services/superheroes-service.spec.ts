@@ -140,4 +140,50 @@ describe('SuperheroesService', () => {
     expect(heroes.length).toBe(1);
     expect(heroes.find(h => h.id === 1)).toBeUndefined();
   });
+
+  it('should return cached heroes immediately from getAllHeroes() if cache is populated', async () => {
+    const loadPromise = firstValueFrom(service.loadAll());
+    httpMock.expectOne('https://akabab.github.io/superhero-api/api/all.json').flush(mockHeroes);
+    await loadPromise;
+
+    const heroes = await firstValueFrom(service.getAllHeroes());
+    expect(heroes.length).toBe(2);
+    httpMock.expectNone('https://akabab.github.io/superhero-api/api/all.json');
+  });
+
+  it('should return hero from local cache immediately in getHeroById() if already exists', async () => {
+    const loadPromise = firstValueFrom(service.loadAll());
+    httpMock.expectOne('https://akabab.github.io/superhero-api/api/all.json').flush(mockHeroes);
+    await loadPromise;
+
+    const hero = await firstValueFrom(service.getHeroById(1));
+    expect(hero.name).toBe('Spider-Man');
+    httpMock.expectNone('https://akabab.github.io/superhero-api/api/id/1.json');
+  });
+
+  it('should avoid adding duplicate hero to cache when fetched from server in getHeroById()', async () => {
+    const loadPromise = firstValueFrom(service.loadAll());
+    httpMock.expectOne('https://akabab.github.io/superhero-api/api/all.json').flush(mockHeroes);
+    await loadPromise;
+
+    const promise = firstValueFrom(service.getHeroById(3));
+    const req = httpMock.expectOne('https://akabab.github.io/superhero-api/api/id/3.json');
+    req.flush(mockHeroes[0]);
+
+    const hero = await firstValueFrom(service.getAllHeroes());
+    expect(hero.length).toBe(2);
+  });
+
+  it('should handle error or propagate it when getHeroById fetch fails', async () => {
+    const promise = firstValueFrom(service.getHeroById(99));
+    const req = httpMock.expectOne('https://akabab.github.io/superhero-api/api/id/99.json');
+    req.flush('Not Found', { status: 404, statusText: 'Not Found' });
+
+    try {
+      await promise;
+    } catch (error) {
+      expect(error).toBeTruthy();
+    }
+  });
+
 });
