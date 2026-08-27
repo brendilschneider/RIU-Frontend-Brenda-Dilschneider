@@ -2,8 +2,8 @@
 
   <div class="header-actions-bar">
     <h2>Superheroes</h2>
-    <button mat-flat-button color="primary" class="add-hero-btn" (click)="addNewHero()">
-      New hero
+    <button mat-flat-button color="primary" class="primary-button" (click)="addNewHero()">
+      + Superhero
     </button>
   </div>
 
@@ -23,36 +23,36 @@
 
       <ng-container matColumnDef="avatar">
         <th mat-header-cell *matHeaderCellDef> Avatar </th>
-        <td mat-cell *matCellDef="let element">
-          <img [src]="element.images.sm" [alt]="element.name" class="avatar-img mat-elevation-z2">
+        <td mat-cell *matCellDef="let heroe">
+          <img [src]="heroe.images.sm" [alt]="heroe.name" class="avatar-img mat-elevation-z2">
         </td>
       </ng-container>
 
       <ng-container matColumnDef="name">
         <th mat-header-cell *matHeaderCellDef> Name </th>
-        <td mat-cell *matCellDef="let element" class="font-medium"> {{ element.name }} </td>
+        <td mat-cell *matCellDef="let heroe" class="font-medium"> {{ heroe.name }} </td>
       </ng-container>
 
       <ng-container matColumnDef="intelligence">
         <th mat-header-cell *matHeaderCellDef> Intelligence </th>
-        <td mat-cell *matCellDef="let element"> {{ element.powerstats.intelligence }} </td>
+        <td mat-cell *matCellDef="let heroe"> {{ heroe.powerstats.intelligence }} </td>
       </ng-container>
 
       <ng-container matColumnDef="power">
         <th mat-header-cell *matHeaderCellDef> Power </th>
-        <td mat-cell *matCellDef="let element"> {{ element.powerstats.power }} </td>
+        <td mat-cell *matCellDef="let heroe"> {{ heroe.powerstats.power }} </td>
       </ng-container>
 
       <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef class="actions-header"> Actions </th>
-        <td mat-cell *matCellDef="let element" class="actions-cell">
+        <td mat-cell *matCellDef="let heroe" class="actions-cell">
           <button mat-icon-button color="accent" matTooltip="View details">
             <mat-icon>visibility</mat-icon>
           </button>
-          <button mat-icon-button color="primary" matTooltip="Edit" (click)="editHero(element)">
+          <button mat-icon-button color="primary" matTooltip="Edit" (click)="editHero(heroe)">
             <mat-icon>edit</mat-icon>
           </button>
-          <button mat-icon-button color="warn" matTooltip="Delete">
+          <button mat-icon-button color="warn" matTooltip="Delete" (click)="deleteHero(heroe)">
             <mat-icon>delete</mat-icon>
           </button>
         </td>

@@ -40,3 +40,15 @@ body {
   margin: 0;
   height: 100%;
 }
+
+.primary-button {
+    background-color: var(--mat-sys-primary, #3f51b5);
+    color: #fff;
+    border-radius: 4px;
+    font-weight: 500;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+    padding: 0 20px;
+    height: 36px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}

@@ -10,6 +10,9 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Router } from '@angular/router';
+import { DialogService } from '../../../shared/confirm-dialog/confirm-dialog.service';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   standalone: true,
@@ -21,7 +24,8 @@ import { Router } from '@angular/router';
     MatIconModule,
     MatInputModule,
     MatFormFieldModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatSnackBarModule
   ],
   selector: 'app-superhero-table',
   styleUrl: './superhero-table.scss',
@@ -31,6 +35,8 @@ export class SuperheroTableComponent implements OnInit {
 
   private superheroService = inject(SuperheroesService);
   private router = inject(Router);
+  private dialogService = inject(DialogService);
+  private snackBar = inject(MatSnackBar);
 
   displayedColumns: string[] = ['avatar', 'name', 'intelligence', 'power', 'actions'];
 
@@ -80,6 +86,21 @@ export class SuperheroTableComponent implements OnInit {
 
   editHero(hero: Superhero) {
     this.router.navigate(['/hero', hero.id]);
+  }
+
+  deleteHero(hero: Superhero) {
+    this.dialogService.openDeleteConfirm(hero.name).subscribe(confirmed => {
+      if (confirmed) {
+        this.superheroService.delete(hero.id).subscribe({
+          next: () => {
+            this.snackBar.open('Superhero deleted successfully!', 'Close', { duration: 3000 });
+          },
+          error: () => {
+            this.snackBar.open('Could not delete the superhero.', 'Close', { duration: 3000 });
+          }
+        });
+      }
+    });
   }
 
 }
