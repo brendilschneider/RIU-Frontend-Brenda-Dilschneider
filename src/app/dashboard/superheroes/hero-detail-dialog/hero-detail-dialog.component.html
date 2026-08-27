@@ -1,0 +1,39 @@
+<div class="hero-detail-container">
+  <div class="hero-header">
+    <img [src]="hero.images.sm" alt="{{ hero.name }}" class="hero-avatar">
+    <div>
+      <h2>{{ hero.name }}</h2>
+      <p class="slug">Slug: {{ hero.slug }}</p>
+    </div>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <section class="hero-section">
+    <h3>Biography</h3>
+    <p><strong>Real Name:</strong> {{ hero.biography.fullName }}</p>
+  </section>
+
+  <mat-divider></mat-divider>
+
+  <section class="hero-section stats">
+  <h3>Powerstats</h3>
+  <div class="stats-grid">
+    <mat-card class="stat-card intelligence">
+      <div class="stat-title">Intelligence</div>
+      <div class="stat-value">{{ hero.powerstats.intelligence }}</div>
+    </mat-card>
+    <mat-card class="stat-card power">
+      <div class="stat-title">Power</div>
+      <div class="stat-value">{{ hero.powerstats.power }}</div>
+    </mat-card>
+  </div>
+</section>
+
+
+  <mat-divider></mat-divider>
+
+  <div class="actions">
+    <button mat-stroked-button color="primary" mat-dialog-close>Close</button>
+  </div>
+</div>

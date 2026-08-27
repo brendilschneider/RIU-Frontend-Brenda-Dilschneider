@@ -1,0 +1,71 @@
+.hero-detail-container {
+  background: #fff;
+  border-radius: 12px;
+  padding: 2rem;
+  max-width: 600px;
+
+  .hero-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .hero-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  }
+
+  .hero-section {
+    margin: 1.5rem 0;
+  }
+
+  .stats-grid {
+  display: flex;
+  gap: 1rem;
+
+  .stat-card {
+    flex: 1;
+    border-radius: 12px;
+    padding: 1.5rem;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+
+    .stat-title {
+      font-size: 0.95rem;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 700;
+    }
+
+    &.intelligence {
+      background-color: #2563eb;
+      color: #fff;
+
+      .stat-title {
+        color: #e0e7ff;
+      }
+    }
+
+    &.power {
+      background-color: #ec4899;
+      color: #fff;
+
+      .stat-title {
+        color: #fce7f3;
+      }
+    }
+  }
+}
+
+  .actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 1.5rem;
+  }
+}
