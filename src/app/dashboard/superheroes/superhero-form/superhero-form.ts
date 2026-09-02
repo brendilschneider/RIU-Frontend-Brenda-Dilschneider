@@ -8,6 +8,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { Superhero } from '../../../models/superhero.model';
+import { UppercaseDirective } from '../../../shared/directives/uppercase.directive';
 
 @Component({
   standalone: true,
@@ -17,7 +18,8 @@ import { Superhero } from '../../../models/superhero.model';
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    UppercaseDirective
   ],
   selector: 'app-superhero-form',
   styleUrl: './superhero-form.scss',
