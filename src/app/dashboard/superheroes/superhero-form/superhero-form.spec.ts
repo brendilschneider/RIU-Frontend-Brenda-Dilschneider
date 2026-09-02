@@ -170,7 +170,7 @@ describe('SuperheroFormComponent', () => {
       expect(editComponent.isEditMode).toBeTrue();
       expect(editComponent.heroId).toBe(1);
       expect(editService.getHeroById).toHaveBeenCalledWith(1);
-      expect(editComponent.heroForm.get('name')?.value).toBe('IRON MAN');
+      expect(editComponent.heroForm.get('name')?.value).toBe('Iron Man');
     });
 
     it('should handle error when loading hero data fails and navigate home', async () => {
