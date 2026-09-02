@@ -1,5 +1,5 @@
-import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SuperheroesService } from '../../../core/services/superheroes-service';
@@ -8,20 +8,22 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { Superhero } from '../../../models/superhero.model';
+import { UppercaseDirective } from '../../../shared/directives/uppercase.directive';
 
 @Component({
   standalone: true,
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    UppercaseDirective
   ],
   selector: 'app-superhero-form',
   styleUrl: './superhero-form.scss',
   templateUrl: './superhero-form.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SuperheroFormComponent implements OnInit {
 
@@ -30,6 +32,7 @@ export class SuperheroFormComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private superheroService = inject(SuperheroesService);
   private snackBar = inject(MatSnackBar);
+  private _titleService = inject(Title);
 
   heroForm!: FormGroup;
   heroId: number = 0;
@@ -43,7 +46,10 @@ export class SuperheroFormComponent implements OnInit {
       if (id) {
         this.heroId = +id;
         this.isEditMode = true;
+        this._titleService.setTitle('RIU Frontend | Edit Superhero');
         this.loadHeroData(+id);
+      } else {
+        this._titleService.setTitle('RIU Frontend | New Superhero');
       }
     });
   }
@@ -54,9 +60,26 @@ export class SuperheroFormComponent implements OnInit {
       slug: ['', [Validators.required]],
       imageUrl: ['', [Validators.required]],
       intelligence: [0, [Validators.required, Validators.min(0), Validators.max(100)]],
+      strength: [0, [Validators.required, Validators.min(0), Validators.max(100)]],
+      speed: [0, [Validators.required, Validators.min(0), Validators.max(100)]],
+      durability: [0, [Validators.required, Validators.min(0), Validators.max(100)]],
       power: [0, [Validators.required, Validators.min(0), Validators.max(100)]],
+      combat: [0, [Validators.required, Validators.min(0), Validators.max(100)]],
+      gender: [''],
+      race: [''],
+      eyeColor: [''],
+      hairColor: [''],
       fullName: ['', [Validators.required]],
+      alterEgos: [''],
+      aliases: [''],
+      placeOfBirth: [''],
+      firstAppearance: [''],
+      publisher: [''],
       alignment: ['good'],
+      occupation: [''],
+      base: [''],
+      groupAffiliation: [''],
+      relatives: [''],
     });
   }
 
@@ -68,9 +91,26 @@ export class SuperheroFormComponent implements OnInit {
           slug: hero.slug,
           imageUrl: hero.images?.sm || '',
           intelligence: hero.powerstats?.intelligence || 0,
+          strength: hero.powerstats?.strength || 0,
+          speed: hero.powerstats?.speed || 0,
+          durability: hero.powerstats?.durability || 0,
           power: hero.powerstats?.power || 0,
+          combat: hero.powerstats?.combat || 0,
+          gender: hero.appearance?.gender || '',
+          race: hero.appearance?.race || '',
+          eyeColor: hero.appearance?.eyeColor || '',
+          hairColor: hero.appearance?.hairColor || '',
           fullName: hero.biography?.fullName || '',
+          alterEgos: hero.biography?.alterEgos || '',
+          aliases: hero.biography?.aliases?.join(', ') || '',
+          placeOfBirth: hero.biography?.placeOfBirth || '',
+          firstAppearance: hero.biography?.firstAppearance || '',
+          publisher: hero.biography?.publisher || '',
           alignment: hero.biography?.alignment || 'good',
+          occupation: hero.work?.occupation || '',
+          base: hero.work?.base || '',
+          groupAffiliation: hero.connections?.groupAffiliation || '',
+          relatives: hero.connections?.relatives || '',
         });
       },
       error: () => {

@@ -1,6 +1,6 @@
 <div class="form-card-container">
   <div class="form-header">
-    <h2>New Superhero</h2>
+    <h2>{{ isEditMode ? 'Edit Superhero' : 'New Superhero' }}</h2>
   </div>
 
   <form [formGroup]="heroForm" (ngSubmit)="onSubmit()" class="superhero-form">
@@ -17,7 +17,7 @@
     <div class="form-row">
       <mat-form-field appearance="outline">
         <mat-label>Superhero Name</mat-label>
-        <input matInput formControlName="name" placeholder="e.g. Iron Man">
+        <input matInput formControlName="name" placeholder="e.g. Iron Man" appUppercase>
         @if (getError('name')) {
           <mat-error>{{ getError('name') }}</mat-error>
         }

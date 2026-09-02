@@ -7,15 +7,13 @@
     </button>
   </div>
 
-<mat-form-field appearance="outline" class="search-field full-width">
-  <mat-label>Search a hero</mat-label>
-  <input matInput
-         (input)="onSearch($any($event.target).value)"
-         placeholder="e.g., Spiderman, Superman...">
-  <button mat-icon-button matSuffix matTooltip="Search">
-    <mat-icon>search</mat-icon>
-  </button>
-</mat-form-field>
+  <mat-form-field appearance="outline" class="search-field full-width">
+    <mat-label>Search a hero</mat-label>
+    <input matInput
+           [formControl]="searchControl"
+           placeholder="e.g., Spiderman, Superman...">
+    <mat-icon matSuffix>search</mat-icon>
+  </mat-form-field>
 
   @if (loadingService.isLoading()) {
     <mat-progress-bar mode="indeterminate" color="primary" class="loading-bar"></mat-progress-bar>
@@ -25,36 +23,36 @@
 
       <ng-container matColumnDef="avatar">
         <th mat-header-cell *matHeaderCellDef> Avatar </th>
-        <td mat-cell *matCellDef="let heroe">
-          <img [src]="heroe.images.sm" [alt]="heroe.name" class="avatar-img mat-elevation-z2">
+        <td mat-cell *matCellDef="let hero">
+          <img [src]="hero.images.sm" [alt]="hero.name" class="avatar-img mat-elevation-z2">
         </td>
       </ng-container>
 
       <ng-container matColumnDef="name">
         <th mat-header-cell *matHeaderCellDef> Name </th>
-        <td mat-cell *matCellDef="let heroe" class="font-medium"> {{ heroe.name }} </td>
+        <td mat-cell *matCellDef="let hero" class="font-medium"> {{ hero.name }} </td>
       </ng-container>
 
       <ng-container matColumnDef="intelligence">
         <th mat-header-cell *matHeaderCellDef> Intelligence </th>
-        <td mat-cell *matCellDef="let heroe"> {{ heroe.powerstats.intelligence }} </td>
+        <td mat-cell *matCellDef="let hero"> {{ hero.powerstats.intelligence }} </td>
       </ng-container>
 
       <ng-container matColumnDef="power">
         <th mat-header-cell *matHeaderCellDef> Power </th>
-        <td mat-cell *matCellDef="let heroe"> {{ heroe.powerstats.power }} </td>
+        <td mat-cell *matCellDef="let hero"> {{ hero.powerstats.power }} </td>
       </ng-container>
 
       <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef class="actions-header"> Actions </th>
-        <td mat-cell *matCellDef="let heroe" class="actions-cell">
-          <button mat-icon-button color="accent" matTooltip="View details" (click)="viewHeroDetails(heroe)">
+        <td mat-cell *matCellDef="let hero" class="actions-cell">
+          <button mat-icon-button color="accent" matTooltip="View details" aria-label="View hero details" (click)="viewHeroDetails(hero)">
             <mat-icon>visibility</mat-icon>
           </button>
-          <button mat-icon-button color="primary" matTooltip="Edit" (click)="editHero(heroe)">
+          <button mat-icon-button color="primary" matTooltip="Edit" aria-label="Edit hero" (click)="editHero(hero)">
             <mat-icon>edit</mat-icon>
           </button>
-          <button mat-icon-button color="warn" matTooltip="Delete" (click)="deleteHero(heroe)">
+          <button mat-icon-button color="warn" matTooltip="Delete" aria-label="Delete hero" (click)="deleteHero(hero)">
             <mat-icon>delete</mat-icon>
           </button>
         </td>

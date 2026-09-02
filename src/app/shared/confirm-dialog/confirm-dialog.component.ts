@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 
@@ -22,10 +22,11 @@ export interface ConfirmDialogData {
       <button mat-button color="secondary" [mat-dialog-close]="false">{{ data.cancelText }}</button>
       <button mat-flat-button color="primary" class="primary-button"  [mat-dialog-close]="true">{{ data.confirmText }}</button>
     </mat-dialog-actions>
-  `
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ConfirmDialogComponent {
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: ConfirmDialogData
+    @Inject(MAT_DIALOG_DATA) public readonly data: ConfirmDialogData
   ) {}
 }
