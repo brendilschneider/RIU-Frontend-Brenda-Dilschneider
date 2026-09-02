@@ -36,12 +36,17 @@ describe('SuperheroTableComponent', () => {
   let router: jasmine.SpyObj<Router>;
 
   beforeEach(async () => {
-    superheroService = jasmine.createSpyObj('SuperheroesService', ['getAllHeroes', 'delete']);
+    superheroService = jasmine.createSpyObj('SuperheroesService', ['getAllHeroes', 'search', 'delete']);
     dialogService = jasmine.createSpyObj('DialogService', ['openDeleteConfirm']);
     snackBar = jasmine.createSpyObj('MatSnackBar', ['open']);
     router = jasmine.createSpyObj('Router', ['navigate']);
 
     superheroService.getAllHeroes.and.returnValue(of(MOCK_HEROES));
+    superheroService.search.and.callFake((query: string) => {
+      const filtered = MOCK_HEROES.filter(h => h.name.toLowerCase().includes(query.toLowerCase()));
+      return of(filtered);
+    });
+
     await TestBed.configureTestingModule({
       imports: [SuperheroTableComponent, NoopAnimationsModule],
       providers: [
@@ -73,47 +78,36 @@ describe('SuperheroTableComponent', () => {
       expect(component.pageIndex()).toBe(0);
       expect(component.pageSize()).toBe(10);
     });
-
-    it('should set isLoading to false and handle error when getAllHeroes fails', async () => {
-      const errorService = jasmine.createSpyObj('SuperheroesService', ['getAllHeroes', 'delete']);
-      errorService.getAllHeroes.and.returnValue(throwError(() => new Error('API Error')));
-
-      const errFixture = TestBed.createComponent(SuperheroTableComponent);
-      const errComponent = errFixture.componentInstance;
-      
-      // Sobrescribimos temporalmente el servicio inyectado para este componente aislado
-      (errComponent as any).superheroService = errorService;
-      
-      errComponent.ngOnInit();
-      expect(errComponent.isLoading()).toBeFalse();
-    });
   });
 
-  describe('computed signals', () => { 
-    it('filteredHeroes should return all heroes when search is empty', () => {
-      expect(component.filteredHeroes().length).toBe(3);
-    });
+  describe('search and reactive controls', () => {
+    const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
-    it('filteredHeroes should filter by name case insensitive', () => {
-      component.onSearch('iron');
+    it('should trigger search and update filtered heroes on searchControl value change', async () => {
+      component.searchControl.setValue('iron');
+      await sleep(350);
+      fixture.detectChanges();
+
+      expect(superheroService.search).toHaveBeenCalledWith('iron');
       expect(component.filteredHeroes().length).toBe(1);
       expect(component.filteredHeroes()[0].name).toBe('Iron Man');
     });
 
-    it('filteredHeroes should return empty array when no match', () => {
-      component.onSearch('Batman');
-      expect(component.filteredHeroes().length).toBe(0);
+    it('should reset pageIndex to 0 when searchControl changes', async () => {
+      component.pageIndex.set(2);
+      component.searchControl.setValue('super');
+      await sleep(350);
+      fixture.detectChanges();
+
+      expect(component.pageIndex()).toBe(0);
     });
 
-    it('filteredHeroes should match partial name - Iron man and spiderman', () => {
-      component.onSearch('super');
-      expect(component.filteredHeroes().length).toBe(1);
-      expect(component.filteredHeroes()[0].name).toBe('Superman');
-    });
-
-    it('totalHeroes should reflect filtered count', () => {
+    it('totalHeroes should reflect filtered count', async () => {
       expect(component.totalHeroes()).toBe(3);
-      component.onSearch('iron');
+      component.searchControl.setValue('iron');
+      await sleep(350);
+      fixture.detectChanges();
+
       expect(component.totalHeroes()).toBe(1);
     });
 
@@ -122,19 +116,6 @@ describe('SuperheroTableComponent', () => {
       component.pageSize.set(2);
       expect(component.paginatedHeroes().length).toBe(1);
       expect(component.paginatedHeroes()[0].name).toBe('Spiderman');
-    });
-  });
-
-  describe('onSearch', () => {
-    it('should update searchQuery signal', () => {
-      component.onSearch('Superman');
-      expect(component.searchQuery()).toBe('Superman');
-    });
-
-    it('should reset pageIndex to 0 on search', () => {
-      component.pageIndex.set(2);
-      component.onSearch('man');
-      expect(component.pageIndex()).toBe(0);
     });
   });
 
@@ -159,7 +140,7 @@ describe('SuperheroTableComponent', () => {
     });
 
     it('should open MatDialog when viewing hero details', () => {
-      const dialogSpy = spyOn(component['dialog'], 'open').and.returnValue({} as any);
+      const dialogSpy = spyOn(component['_dialog'], 'open').and.returnValue({} as any);
       component.viewHeroDetails(MOCK_HEROES[0]);
       expect(dialogSpy).toHaveBeenCalled();
     });

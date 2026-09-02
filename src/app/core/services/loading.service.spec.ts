@@ -29,4 +29,22 @@ describe('LoadingService', () => {
     service.hide();
     expect(service.isLoading()).toBeFalse();
   });
+
+  it('should handle multiple concurrent show/hide calls correctly', () => {
+    service.show();
+    service.show();
+    expect(service.isLoading()).toBeTrue();
+
+    service.hide();
+    expect(service.isLoading()).toBeTrue();
+
+    service.hide();
+    expect(service.isLoading()).toBeFalse();
+  });
+
+  it('should not let request count drop below zero', () => {
+    service.hide();
+    service.hide();
+    expect(service.isLoading()).toBeFalse();
+  });
 });

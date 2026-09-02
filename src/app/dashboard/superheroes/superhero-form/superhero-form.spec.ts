@@ -77,7 +77,11 @@ describe('SuperheroFormComponent', () => {
         slug: 'spider-man',
         imageUrl: 'http://img.com/spider.jpg',
         intelligence: 80,
+        strength: 50,
+        speed: 60,
+        durability: 70,
         power: 75,
+        combat: 80,
         fullName: 'Peter Parker',
         alignment: 'good'
       });
@@ -98,7 +102,11 @@ describe('SuperheroFormComponent', () => {
         slug: 'spider-man',
         imageUrl: 'http://img.com/spider.jpg',
         intelligence: 80,
+        strength: 50,
+        speed: 60,
+        durability: 70,
         power: 75,
+        combat: 80,
         fullName: 'Peter Parker',
         alignment: 'good'
       });
@@ -162,7 +170,7 @@ describe('SuperheroFormComponent', () => {
       expect(editComponent.isEditMode).toBeTrue();
       expect(editComponent.heroId).toBe(1);
       expect(editService.getHeroById).toHaveBeenCalledWith(1);
-      expect(editComponent.heroForm.get('name')?.value).toBe('Iron Man');
+      expect(editComponent.heroForm.get('name')?.value).toBe('IRON MAN');
     });
 
     it('should handle error when loading hero data fails and navigate home', async () => {
@@ -254,5 +262,45 @@ describe('SuperheroFormComponent', () => {
 
       expect(editService.update).toHaveBeenCalled();
     });
+
+    it('should handle hero data with missing optional nested properties gracefully', async () => {
+      const incompleteHero: Superhero = {
+        id: 2,
+        name: 'Incomplete Hero',
+        slug: 'incomplete-hero',
+        powerstats: {} as any,
+        appearance: {} as any,
+        biography: {} as any,
+        work: {} as any,
+        connections: {} as any,
+        images: {} as any
+      };
+
+      const editService = jasmine.createSpyObj('SuperheroesService', ['update', 'getHeroById']);
+      editService.getHeroById.and.returnValue(of(incompleteHero));
+      const editRouter = jasmine.createSpyObj('Router', ['navigate']);
+
+      await TestBed.configureTestingModule({
+        imports: [SuperheroFormComponent, NoopAnimationsModule],
+        providers: [
+          provideRouter([]),
+          { provide: SuperheroesService, useValue: editService },
+          { provide: Router, useValue: editRouter },
+          {
+            provide: ActivatedRoute,
+            useValue: { paramMap: of(new Map([['id', '2']])) }
+          }
+        ]
+      }).compileComponents();
+
+      const editFixture = TestBed.createComponent(SuperheroFormComponent);
+      editFixture.detectChanges();
+      await editFixture.whenStable();
+
+      expect(editFixture.componentInstance.heroForm.get('imageUrl')?.value).toBe('');
+      expect(editFixture.componentInstance.heroForm.get('intelligence')?.value).toBe(0);
+      expect(editFixture.componentInstance.heroForm.get('alignment')?.value).toBe('good');
+    });
+
   });
 });

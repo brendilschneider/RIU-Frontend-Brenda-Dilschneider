@@ -1,17 +1,18 @@
-import { Service, signal } from '@angular/core';
+import { Injectable, signal, computed } from '@angular/core';
 
-@Service()
+@Injectable({
+  providedIn: 'root'
+})
 export class LoadingService {
-    
-    private loadingSignal = signal<boolean>(false);
-    
-    public isLoading = this.loadingSignal.asReadonly();
+  private _requestCount = signal(0);
 
-  show() {
-    this.loadingSignal.set(true);
+  readonly isLoading = computed(() => this._requestCount() > 0);
+
+  show(): void {
+    this._requestCount.update(count => count + 1);
   }
 
-  hide() {
-    this.loadingSignal.set(false);
+  hide(): void {
+    this._requestCount.update(count => Math.max(0, count - 1));
   }
 }

@@ -1,71 +1,76 @@
-import { HttpClient } from '@angular/common/http';
-import { inject, Service } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
+import { Observable, of, delay, finalize } from 'rxjs';
 import { Superhero } from '../../models/superhero.model';
-import { catchError, Observable, of, tap } from 'rxjs';
+import { LoadingService } from './loading.service';
+import { SUPERHEROES_DATA } from './superheroes.data';
 
-@Service()
+@Injectable({
+  providedIn: 'root'
+})
 export class SuperheroesService {
-
-  private http = inject(HttpClient);
-  private apiUrl = 'https://akabab.github.io/superhero-api/api';
-
-  private heroes: Superhero[] = [];
-  
-  loadAll(): Observable<Superhero[]> {
-    return this.http.get<Superhero[]>(`${this.apiUrl}/all.json`).pipe(
-      tap(heroes => this.heroes = heroes),
-      catchError(() => of([]))
-    );
-  }
+  private _loadingService = inject(LoadingService);
+  private _heroes: Superhero[] = [...SUPERHEROES_DATA];
 
   getAllHeroes(): Observable<Superhero[]> {
-    return this.heroes.length > 0
-      ? of(this.heroes)
-      : this.loadAll();
+    this._loadingService.show();
+    return of([...this._heroes]).pipe(
+      delay(300),
+      finalize(() => this._loadingService.hide())
+    );
   }
 
   getHeroById(id: number): Observable<Superhero> {
-    const hero = this.heroes.find(h => h.id === id);
-
-    if (hero) {
-      return of(hero);
+    this._loadingService.show();
+    const hero = this._heroes.find(h => h.id === id);
+    if (!hero) {
+      this._loadingService.hide();
+      throw new Error(`Superhero with id ${id} not found`);
     }
-
-    return this.http.get<Superhero>(`${this.apiUrl}/id/${id}.json`).pipe(
-      tap(serverHero => {
-        const exists = this.heroes.some(h => h.id === serverHero.id);
-        if (!exists) {
-          this.heroes = [...this.heroes, serverHero];
-        }
-      })
+    return of(hero).pipe(
+      delay(300),
+      finalize(() => this._loadingService.hide())
     );
   }
-  
+
   search(query: string): Observable<Superhero[]> {
-    return of(
-      this.heroes.filter(h =>
-        h.name.toLowerCase().includes(query.toLowerCase())
-      )
+    const lowerQuery = query.toLowerCase();
+    const filtered = this._heroes.filter(h =>
+      h.name.toLowerCase().includes(lowerQuery)
+    );
+    return of(filtered).pipe(
+      delay(200),
+      finalize(() => this._loadingService.hide())
     );
   }
 
   add(hero: Partial<Superhero>): Observable<Superhero> {
-    const newId = Math.max(...this.heroes.map(h => h.id), 0) + 1;
+    this._loadingService.show();
+    const newId = this._heroes.length > 0 ? Math.max(...this._heroes.map(h => h.id)) + 1 : 1;
     const newHero = { ...hero, id: newId } as Superhero;
-    this.heroes = [...this.heroes, newHero];
-    return of(newHero);
+    this._heroes = [...this._heroes, newHero];
+    return of(newHero).pipe(
+      delay(300),
+      finalize(() => this._loadingService.hide())
+    );
   }
 
   update(updated: Superhero): Observable<Superhero> {
-    this.heroes = this.heroes.map(h =>
+    this._loadingService.show();
+    this._heroes = this._heroes.map(h =>
       h.id === updated.id ? updated : h
     );
-    return of(updated);
+    return of(updated).pipe(
+      delay(300),
+      finalize(() => this._loadingService.hide())
+    );
   }
 
   delete(id: number): Observable<void> {
-    this.heroes = this.heroes.filter(h => h.id !== id);
-    return of(void 0);
+    this._loadingService.show();
+    this._heroes = this._heroes.filter(h => h.id !== id);
+    return of(void 0).pipe(
+      delay(300),
+      finalize(() => this._loadingService.hide())
+    );
   }
-
 }

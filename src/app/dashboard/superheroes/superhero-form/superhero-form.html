@@ -1,6 +1,6 @@
 <div class="form-card-container">
   <div class="form-header">
-    <h2>New Superhero</h2>
+    <h2>{{ isEditMode ? 'Edit Superhero' : 'New Superhero' }}</h2>
   </div>
 
   <form [formGroup]="heroForm" (ngSubmit)="onSubmit()" class="superhero-form">
